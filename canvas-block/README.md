@@ -14,6 +14,7 @@ It opens straight into the block editor on the homepage, logged in as admin. Eve
 - Twenty Twenty-Five with the Morning style variation
 - Canvas, pinned to a build of a single [Automattic/canvas](https://github.com/Automattic/canvas) commit. `CANVAS_VERSION` records which one.
 - A static homepage plus About, Workshops and Contact pages
+- The editor's "Show template" option turned on for pages, so participants see the site header and footer around the content
 - The header Navigation block left on its default Page List, so it lists all four pages
 - Three photos in the Media Library (bluebells, meadow, hydrangea) for building layouts
 
@@ -28,8 +29,19 @@ The sections run top to bottom in task order. Nothing on the page names a task o
 | 3 | Empty band on the page background | Canvas (empty) | Task 3, evenly spaced row of three |
 | 4 | "Saturday workshops" - image left, text right | Canvas | Task 4, container boundary |
 | 5 | "Weddings and events" - image left, text right | Group containing Columns | Task 4, container boundary |
+| 6 | "This week's bunches" - heading, intro, three images with captions, button | Canvas | Stretch - lots to rearrange |
+| 7 | "From the workshop" - uneven images, text over a photo, a stray button | Canvas | Stretch - tidy up a layout that looks broken |
+| 8 | Full-width meadow photo, with a heading and paragraph layered behind it | Canvas | Stretch - find hidden content and fix layer order |
 
 Sections 4 and 5 look the same on purpose. The only difference is how they behave, which is the point of Task 4. Give the same instruction for both, such as "put the image on the right".
+
+### Stretch sections
+
+Sections 6 to 8 are optional. Use them if a participant gets through the early tasks easily. Some prompts to try:
+
+- **Section 6.** "Swap the first and last bunch, and move the button so it sits under the middle one." Or: "Make the photos bigger and put the heading at the bottom."
+- **Section 7.** "This section looks a bit off. Can you tidy it up so it looks neat?" Watch whether they find Align/Distribute (right-click on a multi-selection) or line things up by hand.
+- **Section 8.** "There should be some text about opening hours in this section. Can you make it visible?" The heading and paragraph are behind the image, so they need List View, the layer order controls or to move the image.
 
 For Task 5 (placing an item between grid cells), use any item in section 1 or 4. Every Canvas starts in Grid mode, so participants have to find Freeform (block Settings > Layout, or the right-click menu) themselves.
 
