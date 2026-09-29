@@ -98,11 +98,17 @@ foreach ( $pages as $order => list( $id, $title, $file, $template ) ) {
 update_option( 'show_on_front', 'page' );
 update_option( 'page_on_front', 100 );
 
-// Skip the editor welcome guides.
+// Skip the editor welcome guides, and turn on "Show template" for pages so
+// the editor shows the header and footer around the content.
 update_user_meta(
 	1,
 	$GLOBALS['wpdb']->get_blog_prefix() . 'persisted_preferences',
 	array(
+		'core'           => array(
+			'renderingModes' => array(
+				get_stylesheet() => array( 'page' => 'template-locked' ),
+			),
+		),
 		'core/edit-post' => array( 'welcomeGuide' => false ),
 		'core/edit-site' => array( 'welcomeGuide' => false ),
 		'_modified'      => gmdate( 'c' ),
