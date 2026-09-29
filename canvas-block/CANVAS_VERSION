@@ -1,0 +1,10 @@
+# Canvas build installed by blueprint.json.
+# Written by update-canvas.sh - rerun the script rather than editing by hand.
+requested=a815d31
+commit=a815d3155f5fa1dae6acd9f36923ba35bf3ff7a3
+commit_date=2026-09-28T14:47:56-04:00
+commit_subject=Refine Canvas selection transforms and preserve composition
+commit_url=https://github.com/Automattic/canvas/commit/a815d3155f5fa1dae6acd9f36923ba35bf3ff7a3
+built_at=2026-09-29T13:56:08Z
+built_with_node=v26.9.0
+sha256=a7a985a526953b145af86ef4c876fa964d1fcfbf68a489b34342b905ad1b8981

@@ -10,9 +10,9 @@ It opens straight into the block editor on the homepage, logged in as admin. Eve
 
 ## What's in the site
 
-- WordPress latest (Canvas needs 7.1 or newer) on PHP 8.3
+- WordPress 7.1.2 on PHP 8.3, both pinned in `blueprint.json` (Canvas needs WordPress 7.1 or newer)
 - Twenty Twenty-Five with the Morning style variation
-- Canvas, pinned to a build of [Automattic/canvas](https://github.com/Automattic/canvas) `trunk` at `a815d31` (28 September 2026)
+- Canvas, pinned to a build of a single [Automattic/canvas](https://github.com/Automattic/canvas) commit. `CANVAS_VERSION` records which one.
 - A static homepage plus About, Workshops and Contact pages
 - The header Navigation block left on its default Page List, so it lists all four pages
 - Three photos in the Media Library (bluebells, meadow, hydrangea) for building layouts
@@ -39,12 +39,41 @@ For Task 5 (placing an item between grid cells), use any item in section 1 or 4.
 - `setup.php` - seeds the site (options, style variation, media, pages, front page)
 - `content/*.html` - block markup for each page, with `%%NAME_ID%%` / `%%NAME_URL%%` / `%%NAME_ALT%%` placeholders for the imported images
 - `canvas.zip` - the pinned Canvas plugin build
+- `CANVAS_VERSION` - the Canvas commit, build date and checksum for `canvas.zip`
+- `update-canvas.sh` - rebuilds `canvas.zip` from a chosen Canvas commit
 
 ## Updating Canvas
 
-The zip is committed rather than pulled from GitHub Actions, for two reasons. Canvas's build artifacts expire after 90 days, and pinning means every participant sees the same version.
+Canvas has no formal releases yet and its `trunk` changes often. So the blueprint never installs Canvas straight from GitHub. It installs the `canvas.zip` committed here, which is built from one known commit. New commits to Canvas can't change the test site until someone deliberately updates this zip.
 
-To move to a newer build, download the `canvas` artifact from a successful [Build Playground run](https://github.com/Automattic/canvas/actions/workflows/playground.yml), extract `canvas.zip`, replace the one here and update the commit reference above.
+### Check the current version
+
+```sh
+cat CANVAS_VERSION
+```
+
+### Update to a new build
+
+You need Git, Node.js 22 or newer and npm.
+
+```sh
+./update-canvas.sh              # latest commit on Canvas trunk (the default)
+./update-canvas.sh latest       # same thing
+./update-canvas.sh 7141416      # a specific commit (short or full SHA)
+./update-canvas.sh some-branch  # a branch or tag
+```
+
+The script clones Canvas, checks out the commit and builds the plugin with Canvas's own `npm run package:plugin`. It then replaces `canvas.zip` and rewrites `CANVAS_VERSION`. It doesn't commit anything.
+
+After it runs:
+
+1. Open the blueprint in Playground and run through the tasks. Canvas's saved format is still experimental, so check that the seeded sections in `content/home.html` still load without block errors.
+2. Commit `canvas.zip` and `CANVAS_VERSION` together, with the Canvas commit in the message.
+3. Don't update Canvas partway through a round of sessions. Every participant in a round should see the same build.
+
+### Updating WordPress
+
+WordPress is pinned with `preferredVersions.wp` in `blueprint.json`. Change it deliberately between rounds, not during one.
 
 ## Editing content
 

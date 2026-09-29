@@ -8,7 +8,7 @@
 	"landingPage": "/wp-admin/post.php?post=100&action=edit",
 	"preferredVersions": {
 		"php": "8.3",
-		"wp": "latest"
+		"wp": "7.1.2"
 	},
 	"features": {
 		"networking": true
