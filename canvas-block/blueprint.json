@@ -1,0 +1,48 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"meta": {
+		"title": "Canvas block - interaction and usability test",
+		"description": "Bluebell & Bloom demo site with the Canvas block, Twenty Twenty-Five (Morning), a static homepage and seeded test sections.",
+		"author": "getdave"
+	},
+	"landingPage": "/wp-admin/post.php?post=100&action=edit",
+	"preferredVersions": {
+		"php": "8.3",
+		"wp": "latest"
+	},
+	"features": {
+		"networking": true
+	},
+	"login": true,
+	"steps": [
+		{
+			"step": "installTheme",
+			"themeData": {
+				"resource": "wordpress.org/themes",
+				"slug": "twentytwentyfive"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "url",
+				"url": "https://raw.githubusercontent.com/getdave/wordpress-user-testing/trunk/canvas-block/canvas.zip"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{ "step": "writeFile", "path": "/wordpress/wp-content/user-testing/setup.php", "data": { "resource": "url", "url": "https://raw.githubusercontent.com/getdave/wordpress-user-testing/trunk/canvas-block/setup.php" } },
+		{ "step": "writeFile", "path": "/wordpress/wp-content/user-testing/content/home.html", "data": { "resource": "url", "url": "https://raw.githubusercontent.com/getdave/wordpress-user-testing/trunk/canvas-block/content/home.html" } },
+		{ "step": "writeFile", "path": "/wordpress/wp-content/user-testing/content/about.html", "data": { "resource": "url", "url": "https://raw.githubusercontent.com/getdave/wordpress-user-testing/trunk/canvas-block/content/about.html" } },
+		{ "step": "writeFile", "path": "/wordpress/wp-content/user-testing/content/workshops.html", "data": { "resource": "url", "url": "https://raw.githubusercontent.com/getdave/wordpress-user-testing/trunk/canvas-block/content/workshops.html" } },
+		{ "step": "writeFile", "path": "/wordpress/wp-content/user-testing/content/contact.html", "data": { "resource": "url", "url": "https://raw.githubusercontent.com/getdave/wordpress-user-testing/trunk/canvas-block/content/contact.html" } },
+		{
+			"step": "runPHP",
+			"code": "<?php require '/wordpress/wp-content/user-testing/setup.php';"
+		}
+	]
+}
