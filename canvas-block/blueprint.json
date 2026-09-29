@@ -35,11 +35,50 @@
 				"activate": true
 			}
 		},
-		{ "step": "writeFile", "path": "/wordpress/wp-content/user-testing/setup.php", "data": { "resource": "url", "url": "https://raw.githubusercontent.com/getdave/wordpress-user-testing/trunk/canvas-block/setup.php" } },
-		{ "step": "writeFile", "path": "/wordpress/wp-content/user-testing/content/home.html", "data": { "resource": "url", "url": "https://raw.githubusercontent.com/getdave/wordpress-user-testing/trunk/canvas-block/content/home.html" } },
-		{ "step": "writeFile", "path": "/wordpress/wp-content/user-testing/content/about.html", "data": { "resource": "url", "url": "https://raw.githubusercontent.com/getdave/wordpress-user-testing/trunk/canvas-block/content/about.html" } },
-		{ "step": "writeFile", "path": "/wordpress/wp-content/user-testing/content/workshops.html", "data": { "resource": "url", "url": "https://raw.githubusercontent.com/getdave/wordpress-user-testing/trunk/canvas-block/content/workshops.html" } },
-		{ "step": "writeFile", "path": "/wordpress/wp-content/user-testing/content/contact.html", "data": { "resource": "url", "url": "https://raw.githubusercontent.com/getdave/wordpress-user-testing/trunk/canvas-block/content/contact.html" } },
+		{
+			"step": "mkdir",
+			"path": "/wordpress/wp-content/user-testing/content"
+		},
+		{
+			"step": "writeFile",
+			"path": "/wordpress/wp-content/user-testing/setup.php",
+			"data": {
+				"resource": "url",
+				"url": "https://raw.githubusercontent.com/getdave/wordpress-user-testing/trunk/canvas-block/setup.php"
+			}
+		},
+		{
+			"step": "writeFile",
+			"path": "/wordpress/wp-content/user-testing/content/home.html",
+			"data": {
+				"resource": "url",
+				"url": "https://raw.githubusercontent.com/getdave/wordpress-user-testing/trunk/canvas-block/content/home.html"
+			}
+		},
+		{
+			"step": "writeFile",
+			"path": "/wordpress/wp-content/user-testing/content/about.html",
+			"data": {
+				"resource": "url",
+				"url": "https://raw.githubusercontent.com/getdave/wordpress-user-testing/trunk/canvas-block/content/about.html"
+			}
+		},
+		{
+			"step": "writeFile",
+			"path": "/wordpress/wp-content/user-testing/content/workshops.html",
+			"data": {
+				"resource": "url",
+				"url": "https://raw.githubusercontent.com/getdave/wordpress-user-testing/trunk/canvas-block/content/workshops.html"
+			}
+		},
+		{
+			"step": "writeFile",
+			"path": "/wordpress/wp-content/user-testing/content/contact.html",
+			"data": {
+				"resource": "url",
+				"url": "https://raw.githubusercontent.com/getdave/wordpress-user-testing/trunk/canvas-block/content/contact.html"
+			}
+		},
 		{
 			"step": "runPHP",
 			"code": "<?php require '/wordpress/wp-content/user-testing/setup.php';"
