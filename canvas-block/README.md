@@ -66,7 +66,15 @@ cat CANVAS_VERSION
 
 ### Update to a new build
 
-You need Git, Node.js 22 or newer and npm.
+The easiest way is the "Update Canvas build" workflow. Run it from the Actions tab, or from the command line.
+
+```sh
+gh workflow run update-canvas-build.yml -f ref=trunk
+```
+
+`ref` can be a branch, a tag or a full commit SHA from Automattic/canvas. The workflow builds the plugin and commits `canvas.zip` and `CANVAS_VERSION` to `trunk`, which takes a few minutes. It never touches `blueprint.json`, `setup.php` or `content/`.
+
+To build locally instead, you need Git, Node.js 22 or newer and npm.
 
 ```sh
 ./update-canvas.sh              # latest commit on Canvas trunk (the default)
@@ -77,37 +85,15 @@ You need Git, Node.js 22 or newer and npm.
 
 The script clones Canvas, checks out the commit and builds the plugin with Canvas's own `npm run package:plugin`. It then replaces `canvas.zip` and rewrites `CANVAS_VERSION`. It doesn't commit anything.
 
-After it runs:
+After building:
 
-1. Open the blueprint in Playground and run through the tasks. Canvas's saved format is still experimental, so check that the seeded sections in `content/home.html` still load without block errors.
-2. Commit `canvas.zip` and `CANVAS_VERSION` together, with the Canvas commit in the message.
+1. Open the link in Playground and run through the tasks. Canvas's saved format is still experimental, so check that the seeded sections in `content/home.html` still load without block errors.
+2. If you built locally, commit `canvas.zip` and `CANVAS_VERSION` together, with the Canvas commit in the message. The workflow does this itself.
 3. Don't update Canvas partway through a round of sessions. Every participant in a round should see the same build.
 
 ### Updating WordPress
 
 WordPress is pinned with `preferredVersions.wp` in `blueprint.json`. Change it deliberately between rounds, not during one.
-
-## The updated-build link
-
-There are two Playground links. The one at the top of this README is the pinned build and the safe default for sessions. The updated-build link installs a newer Canvas build, so you can try upstream changes before deciding to adopt them.
-
-[Launch the updated build in WordPress Playground](https://playground.wordpress.net/?blueprint-url=https%3A%2F%2Fraw.githubusercontent.com%2Fgetdave%2Fwordpress-user-testing%2Ftrunk%2Fcanvas-block%2Fblueprint-updated.json)
-
-It uses `blueprint-updated.json`, `canvas-updated.zip` and `CANVAS_VERSION-updated`. WordPress, the theme and the seeded content are shared with the pinned link.
-
-### Refresh the updated build
-
-Run the "Update Canvas (updated-build link only)" workflow from the Actions tab, or from the command line.
-
-```sh
-gh workflow run update-canvas-build.yml -f ref=trunk
-```
-
-`ref` can be a branch, a tag or a full commit SHA from Automattic/canvas. The workflow builds the plugin and commits `canvas-updated.zip` and `CANVAS_VERSION-updated` to `trunk`. It takes a few minutes. Read `CANVAS_VERSION-updated` afterwards to confirm which commit you got.
-
-The workflow can't touch the pinned link. It never writes `blueprint.json`, `canvas.zip` or `CANVAS_VERSION`, and it aborts if anything else is staged. The build job that runs npm has a read-only token, and the job that commits runs no third-party code.
-
-Both links share `setup.php` and `content/`, so editing those changes both. To promote the updated build to the pinned one, run `./update-canvas.sh` for the same commit between rounds.
 
 ## Editing content
 
