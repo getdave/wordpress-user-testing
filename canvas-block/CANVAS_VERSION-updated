@@ -1,0 +1,20 @@
+# Canvas build installed by blueprint-updated.json.
+# Built from the Automattic/canvas "Build Playground" CI artifact (run 36783257420),
+# not update-canvas.sh - local build execution wasn't available when this was made.
+requested=latest (overnight update, 2026-10-01)
+commit=be061c182c1c349a65001feb1ee7e2f3db6117e8
+commit_date=2026-09-30T22:02:53Z
+commit_subject=Document inherited styles and native placeholders for patterns
+commit_url=https://github.com/Automattic/canvas/commit/be061c182c1c349a65001feb1ee7e2f3db6117e8
+built_at=2026-09-30T22:04:09Z
+built_by=GitHub Actions (Automattic/canvas CI), run https://github.com/Automattic/canvas/actions/runs/36783257420
+built_with_node=22
+sha256=9c010c44d3f833f781fc3e5056ecdf914af29d7734edbb4fa992eb5fc53d6749
+
+# New commits since the pinned build in CANVAS_VERSION (a815d31, 2026-09-28):
+# be061c1 Document inherited styles and native placeholders for patterns
+# e9326c3 Refresh bundled Canvas patterns and inherit theme styles
+# 97d97ee Add native Canvas pattern selection and section insertion
+# 952d809 Duplicate Canvas selections with Option or Alt drag
+# f28f766 Preserve responsive Canvas geometry and add full-height sizing
+# 9e67df4 Use native block order for Canvas stacking
