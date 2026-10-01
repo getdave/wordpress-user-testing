@@ -1,10 +1,11 @@
 # Canvas build installed by blueprint.json.
-# Written by update-canvas.sh - rerun the script rather than editing by hand.
-requested=a815d31
-commit=a815d3155f5fa1dae6acd9f36923ba35bf3ff7a3
-commit_date=2026-09-28T14:47:56-04:00
-commit_subject=Refine Canvas selection transforms and preserve composition
-commit_url=https://github.com/Automattic/canvas/commit/a815d3155f5fa1dae6acd9f36923ba35bf3ff7a3
-built_at=2026-09-29T13:56:08Z
-built_with_node=v26.9.0
-sha256=a7a985a526953b145af86ef4c876fa964d1fcfbf68a489b34342b905ad1b8981
+# Written automatically by .github/workflows/update-canvas-build.yml.
+# Rerun the workflow rather than editing this by hand.
+requested=be061c182c1c349a65001feb1ee7e2f3db6117e8
+commit=be061c182c1c349a65001feb1ee7e2f3db6117e8
+commit_date=2026-09-30T18:02:53-04:00
+commit_subject=Document inherited styles and native placeholders for patterns
+commit_url=https://github.com/Automattic/canvas/commit/be061c182c1c349a65001feb1ee7e2f3db6117e8
+built_at=2026-10-01T09:03:18Z
+built_by=GitHub Actions, run https://github.com/getdave/wordpress-user-testing/actions/runs/36840155192
+sha256=0a53583881730e8798203839ea9c134e2f2b9b63774938e60640e9f9fb151da2
