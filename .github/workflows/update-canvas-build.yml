@@ -1,0 +1,150 @@
+name: Update Canvas (updated-build link only)
+
+# Builds canvas-block/canvas-updated.zip from a chosen Automattic/canvas ref
+# and records it in canvas-block/CANVAS_VERSION-updated.
+#
+# Safety invariant: this workflow must NEVER write blueprint.json, canvas.zip
+# or CANVAS_VERSION. Those are the pinned build the always-safe Playground
+# link depends on.
+#
+# How that's enforced:
+#   1. The build job runs third-party code (npm ci) but has a read-only token
+#      and never checks out this repo, so it can't push anything.
+#   2. The publish job has the write token but runs no third-party code. It
+#      only copies two files, adds them by exact name, and aborts if anything
+#      else is staged.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Automattic/canvas branch, tag or full 40-character commit SHA to build"
+        required: false
+        default: "trunk"
+
+permissions: {}
+
+concurrency:
+  group: update-canvas-build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout Automattic/canvas
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: Automattic/canvas
+          ref: ${{ inputs.ref }}
+          path: canvas-src
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: canvas-src/package-lock.json
+
+      - name: Install and package the plugin
+        working-directory: canvas-src
+        run: |
+          npm ci
+          npm run package:plugin
+          unzip -t dist/canvas.zip
+
+      - name: Collect the build and its metadata
+        run: |
+          mkdir out
+          cp canvas-src/dist/canvas.zip out/canvas-updated.zip
+          git -C canvas-src rev-parse HEAD > out/sha.txt
+          git -C canvas-src log -1 --format=%aI > out/date.txt
+          git -C canvas-src log -1 --format=%s > out/subject.txt
+          shasum -a 256 out/canvas-updated.zip | cut -d' ' -f1 > out/sha256.txt
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: canvas-updated-build
+          path: out/
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    env:
+      REF: ${{ inputs.ref }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: trunk
+
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: canvas-updated-build
+          path: incoming
+
+      - name: Validate, stage and commit the updated build only
+        run: |
+          set -euo pipefail
+
+          SHA="$(head -n1 incoming/sha.txt)"
+          COMMIT_DATE="$(head -n1 incoming/date.txt)"
+          SUBJECT="$(head -n1 incoming/subject.txt)"
+          SHA256="$(head -n1 incoming/sha256.txt)"
+
+          if ! printf '%s' "$SHA" | grep -Eq '^[0-9a-f]{40}$'; then
+            echo "Build metadata has an invalid commit SHA." >&2
+            exit 1
+          fi
+          unzip -t incoming/canvas-updated.zip > /dev/null
+          ACTUAL="$(shasum -a 256 incoming/canvas-updated.zip | cut -d' ' -f1)"
+          if [ "$ACTUAL" != "$SHA256" ]; then
+            echo "Checksum mismatch between the build and its metadata." >&2
+            exit 1
+          fi
+
+          cp incoming/canvas-updated.zip canvas-block/canvas-updated.zip
+          cat > canvas-block/CANVAS_VERSION-updated <<EOF
+          # Canvas build installed by blueprint-updated.json.
+          # Written automatically by .github/workflows/update-canvas-build.yml.
+          # Rerun the workflow rather than editing this by hand.
+          requested=$REF
+          commit=$SHA
+          commit_date=$COMMIT_DATE
+          commit_subject=$SUBJECT
+          commit_url=https://github.com/Automattic/canvas/commit/$SHA
+          built_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          built_by=GitHub Actions, run $RUN_URL
+          sha256=$SHA256
+          EOF
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Exact names only, never a directory or wildcard.
+          git add canvas-block/canvas-updated.zip canvas-block/CANVAS_VERSION-updated
+
+          UNEXPECTED="$(git diff --cached --name-only | grep -vxF -e canvas-block/canvas-updated.zip -e canvas-block/CANVAS_VERSION-updated || true)"
+          if [ -n "$UNEXPECTED" ]; then
+            echo "Refusing to commit paths this workflow must never touch:" >&2
+            echo "$UNEXPECTED" >&2
+            exit 1
+          fi
+
+          git commit \
+            -m "Update the updated-build Canvas link to ${SHA:0:7}" \
+            -m "$SUBJECT" \
+            -m "https://github.com/Automattic/canvas/commit/$SHA" \
+            -m "Touches only canvas-updated.zip and CANVAS_VERSION-updated. blueprint.json, canvas.zip and CANVAS_VERSION (the pinned build) are never written by this workflow."
+
+          git pull --rebase origin trunk
+          git push origin HEAD:trunk
