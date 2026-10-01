@@ -87,6 +87,28 @@ After it runs:
 
 WordPress is pinned with `preferredVersions.wp` in `blueprint.json`. Change it deliberately between rounds, not during one.
 
+## The updated-build link
+
+There are two Playground links. The one at the top of this README is the pinned build and the safe default for sessions. The updated-build link installs a newer Canvas build, so you can try upstream changes before deciding to adopt them.
+
+[Launch the updated build in WordPress Playground](https://playground.wordpress.net/?blueprint-url=https%3A%2F%2Fraw.githubusercontent.com%2Fgetdave%2Fwordpress-user-testing%2Ftrunk%2Fcanvas-block%2Fblueprint-updated.json)
+
+It uses `blueprint-updated.json`, `canvas-updated.zip` and `CANVAS_VERSION-updated`. WordPress, the theme and the seeded content are shared with the pinned link.
+
+### Refresh the updated build
+
+Run the "Update Canvas (updated-build link only)" workflow from the Actions tab, or from the command line.
+
+```sh
+gh workflow run update-canvas-build.yml -f ref=trunk
+```
+
+`ref` can be a branch, a tag or a full commit SHA from Automattic/canvas. The workflow builds the plugin and commits `canvas-updated.zip` and `CANVAS_VERSION-updated` to `trunk`. It takes a few minutes. Read `CANVAS_VERSION-updated` afterwards to confirm which commit you got.
+
+The workflow can't touch the pinned link. It never writes `blueprint.json`, `canvas.zip` or `CANVAS_VERSION`, and it aborts if anything else is staged. The build job that runs npm has a read-only token, and the job that commits runs no third-party code.
+
+Both links share `setup.php` and `content/`, so editing those changes both. To promote the updated build to the pinned one, run `./update-canvas.sh` for the same commit between rounds.
+
 ## Editing content
 
 Edit the files in `content/` and push to `trunk`. Raw GitHub files are cached for about five minutes, so a change can take that long to reach Playground.
